@@ -1,13 +1,38 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { insertConsultationRequestSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // put application routes here
-  // prefix all routes with /api
+  app.post("/api/consultations", async (req, res) => {
+    try {
+      const validatedData = insertConsultationRequestSchema.parse(req.body);
+      const consultationRequest = await storage.createConsultationRequest(validatedData);
+      res.status(201).json(consultationRequest);
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        res.status(400).json({ 
+          error: "Validation failed", 
+          details: error.errors 
+        });
+      } else {
+        res.status(500).json({ 
+          error: "Failed to create consultation request" 
+        });
+      }
+    }
+  });
 
-  // use storage to perform CRUD operations on the storage interface
-  // e.g. storage.insertUser(user) or storage.getUserByUsername(username)
+  app.get("/api/consultations", async (_req, res) => {
+    try {
+      const requests = await storage.getAllConsultationRequests();
+      res.json(requests);
+    } catch (error) {
+      res.status(500).json({ 
+        error: "Failed to fetch consultation requests" 
+      });
+    }
+  });
 
   const httpServer = createServer(app);
 
