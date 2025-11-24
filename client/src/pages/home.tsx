@@ -190,14 +190,14 @@ export default function Home() {
   const team = [
     {
       image: teamCEO,
-      name: "Dr. Sarah Chen",
+      name: "Mrs. Anjali",
       role: "CEO & Co-Founder",
       bio: "Former AI Research Lead at Stanford. 15+ years pioneering machine learning applications.",
-      linkedin: "#",
+      linkedin: "https://www.linkedin.com/in/anjali-saini-553b0a39/",
     },
     {
       image: teamCTO,
-      name: "Marcus Johnson",
+      name: "Mrs. Pooja",
       role: "CTO",
       bio: "Ex-Google AI architect. Built scalable ML systems serving millions of users daily.",
       linkedin: "#",
