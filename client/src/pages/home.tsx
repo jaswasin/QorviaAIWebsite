@@ -192,7 +192,7 @@ export default function Home() {
       image: teamCEO,
       name: "Mrs. Anjali",
       role: "CEO & Co-Founder",
-      bio: "Former AI Research Lead at Stanford. 10+ years pioneering machine learning applications.",
+      bio: "Former AI Research Lead at Stanford. 12+ years pioneering machine learning applications.",
       linkedin: "https://www.linkedin.com/in/anjali-saini-553b0a39/",
     },
     {
