@@ -719,7 +719,7 @@ export default function Home() {
                   </div>
                   <div data-testid="contact-phone">
                     <p className="text-muted-foreground mb-1">Phone</p>
-                    <p className="font-medium">+1 (555) 123-4567</p>
+                    <p className="font-medium">+1 (000) 123-4567</p>
                   </div>
                 </div>
               </Card>
