@@ -12,8 +12,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { insertConsultationRequestSchema, type InsertConsultationRequest } from "@shared/schema";
-import { useMutation } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import {
   Sparkles,
@@ -47,6 +45,7 @@ import teamSuccess from "@assets/generated_images/team_photo_client_success.png"
 
 export default function Home() {
   const { toast } = useToast();
+  const contactEmail = "contact@qorvia.ai";
 
   const form = useForm<InsertConsultationRequest>({
     resolver: zodResolver(insertConsultationRequestSchema),
@@ -60,28 +59,28 @@ export default function Home() {
     },
   });
 
-  const consultationMutation = useMutation({
-    mutationFn: async (data: InsertConsultationRequest) => {
-      return apiRequest("POST", "/api/consultations", data);
-    },
-    onSuccess: () => {
-      toast({
-        title: "Request Submitted!",
-        description: "We'll get back to you within 24 hours.",
-      });
-      form.reset();
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to submit request. Please try again.",
-        variant: "destructive",
-      });
-    },
-  });
-
   const onSubmit = (data: InsertConsultationRequest) => {
-    consultationMutation.mutate(data);
+    const subject = encodeURIComponent(`Consultation request from ${data.name}`);
+    const body = encodeURIComponent(
+      [
+        `Name: ${data.name}`,
+        `Email: ${data.email}`,
+        `Company: ${data.company}`,
+        `Service interest: ${data.service}`,
+        `Budget range: ${data.budgetRange}`,
+        "",
+        data.projectDescription,
+      ].join("\n"),
+    );
+
+    window.location.href = `mailto:${contactEmail}?subject=${subject}&body=${body}`;
+
+    toast({
+      title: "Opening email client",
+      description: `We prepared your consultation request for ${contactEmail}.`,
+    });
+
+    form.reset();
   };
 
   const scrollToSection = (id: string) => {
@@ -670,11 +669,10 @@ export default function Home() {
                       type="submit"
                       size="lg"
                       className="w-full"
-                      disabled={consultationMutation.isPending}
                       data-testid="button-submit-consultation"
                     >
-                      {consultationMutation.isPending ? "Submitting..." : "Submit Request"}
-                      {!consultationMutation.isPending && <ArrowRight className="ml-2 w-5 h-5" />}
+                      Submit Request
+                      <ArrowRight className="ml-2 w-5 h-5" />
                     </Button>
                   </form>
                 </Form>
